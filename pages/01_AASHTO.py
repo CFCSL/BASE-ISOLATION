@@ -31,7 +31,9 @@ S_S=st.number_input("$S_S$",value= 0.25, min_value=0.0, step=0.05, format="%.3f"
 st.write("**Long-Period Range of Spectrum Acceleration:**")
 S_1=st.number_input("$S_1$",value= 0.1, min_value=0.0, step=0.05, format="%.3f")
 
-
+st.write("**equivalent viscous damping ratio:**")
+xi=st.number_input("$\\xi$ (percentage)",value= 10, max_value=100, step=1) # percentage
+xi=xi/100 #real value
 
 st.write("**Site Class**: ")
 options=["A","B","C","D","E","F"]
@@ -52,20 +54,31 @@ st.write("**Period T[s]**")
 T_max=st.number_input("Select T_max[s]", value= 6., min_value=1., step=1., format="%.3f")
 x = np.linspace(0.01,T_max , 200)
 
+# List of colors for each SiteClass
+siteclass_colors = ['blue', 'green', 'red', 'purple', 'orange']
+
+# damping coefficient for the long-period range of the design response spectrum
+B_L=(xi/0.05)**3
 
 # Create the plot
 fig, ax = plt.subplots()
-for k in SiteClass:
+for i, k in enumerate(SiteClass):
 
-    ax.plot(x, RS.AASHTO(x, PGA=PGA, S_S=S_S, S_1=S_1, SiteClass=k), label=k)
+	C_sm=RS.AASHTO(x, PGA=PGA, S_S=S_S, S_1=S_1, SiteClass=k)
+	C_smd=C_sm/B_L
+	
+	color = siteclass_colors[i % len(siteclass_colors)]
+	
+	ax.plot(x,C_sm,linestyle='dashed', label=f'{k}',color=color)
+	ax.plot(x,C_smd, label=f'{k}-d',color=color)
 
-    ax.legend()
-    #ax.set_title("Design Response Spectrum"+ "PGA=",PGA, + "$S_S$=", S_S, + "$S_1$=", S_1, + "Site Class=", SiteClass)
-    ax.set_title("Design Response Spectrum PGA={}, $S_S$={}, $S_1$={}, Site Class={}".format(PGA, S_S, S_1, SiteClass))
-    
+ax.legend()
+
+ax.set_title("Design Response Spectrum PGA={}, $S_S$={}, $S_1$={}, Site Class={}".format(PGA, S_S, S_1, SiteClass))
+
 # Set the x-axis and y-axis labels
 ax.set_xlabel('T[s]')
-ax.set_ylabel('$C_{sm}$')
+ax.set_ylabel('$C_{sm} vs C_{smd}$')
 
 # Display the plot in Streamlit
 st.pyplot(fig)
@@ -79,10 +92,16 @@ list_df=[]
 list_df1=[]
 # create interations
 for k in SiteClass:
+	C_sm=RS.AASHTO(x, PGA=PGA, S_S=S_S, S_1=S_1, SiteClass=k)
+	C_smd=C_sm/B_L
 	df_k = pd.DataFrame({'Period[s]': x,
-                         "C_sm"+"-"+str(k): RS.AASHTO(x, PGA=PGA, S_S=S_S, S_1=S_1, SiteClass=k)})
+                         "C_sm"+"-"+str(k):C_sm,
+						 "C_smd"+"-"+str(k):C_smd
+						 })
 	df1_k = pd.DataFrame({'Frequency[1/s]': (1/x),
-                         "C_sm"+"-"+str(k): RS.AASHTO(x, PGA=PGA, S_S=S_S, S_1=S_1, SiteClass=k)})
+                         "C_sm"+"-"+str(k): C_sm,
+						 "C_smd"+"-"+str(k):C_smd
+						 })
 	# sort column 'Frequency[1/s]' in ascending order
 	df1_k=df1_k.sort_values('Frequency[1/s]').round(4)
 
