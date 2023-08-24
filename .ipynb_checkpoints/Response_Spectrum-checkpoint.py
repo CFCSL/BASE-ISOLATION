@@ -131,10 +131,6 @@ def AASHTO(T, PGA,S_S,S_1,SiteClass): #col is position =0/1/2/3/4
 	
 	return C_sm, F_pga, F_a, F_v, A_S, S_DS,S_D1
 
-C_sm, F_pga, F_a, F_v, A_S, S_DS,S_D1=AASHTO(T=1, PGA=0.4,S_S=0.75,S_1=0.2,SiteClass="B")
-
-print(S_DS)
-
 
 
 
