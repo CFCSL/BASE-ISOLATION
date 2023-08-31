@@ -131,6 +131,31 @@ def AASHTO(T, PGA,S_S,S_1,SiteClass): #col is position =0/1/2/3/4
 	
 	return C_sm, F_pga, F_a, F_v, A_S, S_DS,S_D1
 
+def Plot(T_max, PGA, S_S, S_1, SiteClass):    
+    x = np.linspace(0.01, T_max, 200)
+    C_sm, F_pga, F_a, F_v, A_S, S_DS, S_D1 = AASHTO(T=x, PGA=PGA, S_S=S_S, S_1=S_1, SiteClass=SiteClass)
+    
+    plt.plot(x, C_sm)
+
+    # Set the title, x-axis label, and y-axis label
+    plt.title(f"Design Response Spectrum for Site Class: {SiteClass}")
+    plt.xlabel('T [s]')
+    plt.ylabel('Csm')
+
+    # Show the plot
+    plt.show()
+
+# Example values (replace these with your actual values)
+T_max = 3.0
+PGA = 0.4
+S_S = 0.75
+S_1 = 0.2
+SiteClass = "B"
+
+# Call the Plot function
+Plot(T_max, PGA, S_S, S_1, SiteClass)
+
+
 
 
 
