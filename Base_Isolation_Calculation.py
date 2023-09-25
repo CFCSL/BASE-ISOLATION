@@ -24,8 +24,23 @@ def round_equation(eq, num_digits=2):
     rounded_rhs = round_expr(rhs, num_digits)
     return Eq(lhs, rounded_rhs)
 
+# Round the values in each column to n decimal places
+def round_values(x,n):
+    try:
+        return round(x, n)
+    except:
+        return x
+    
+# Apply the e-4 formatting to numeric columns
+def scientific_format(x):
+    try:
+        float_value = float(x)
+        return '{:.2e}'.format(float_value).replace('+', '')
+    except:
+        return x
+
 #%%
-def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
+def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type):
     
     """
     m: Number of supports
@@ -62,22 +77,21 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
     d: set initial guess for the first iteration
  
     """
+    #Isolator_Type = ['Lead-rubber bearing','Spherical friction bearing','EradiQuake bearing']
+
+# Calculate Response Spectrum:
+    # Create a array of time:
+    shape=200
+    t=np.linspace(0,T_max,shape)
+    # Call the Response Spectrum function
+    C_sm, F_pga, F_a, F_v, A_S, S_DS,S_D1=AASHTO(t, PGA,S_S,S_1,SiteClass) 
     
-    # Round the values in each column to n decimal places
-    def round_values(x,n):
-        try:
-            return round(x, n)
-        except:
-            return x
-
-    # Apply the e-4 formatting to numeric columns
-    def scientific_format(x):
-        try:
-            float_value = float(x)
-            return '{:.2e}'.format(float_value).replace('+', '')
-        except:
-            return x
-
+    # Plot Design Response Spectrum
+    plt.plot(t, C_sm)
+    plt.title(f"Design Response Spectrum for PGA={PGA}, S_S={S_S}, S_1= {S_1}, SiteClass={SiteClass}")
+    plt.xlabel(f'Period')
+    plt.ylabel(f'Acceleration')
+    plt.show()
 
     ##%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     # B2.1.1—Step A: Identifty Bridge Data
@@ -224,7 +238,7 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
         ##%% Check the convergence condition:
 
         #if difference> epsilon:
-        if difference> epsilon:
+        if difference> tol:
             d=d_new
             i+=1
 
