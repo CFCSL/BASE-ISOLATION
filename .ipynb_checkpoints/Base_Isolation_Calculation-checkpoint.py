@@ -8,6 +8,7 @@ import pandas as pd
 from Response_Spectrum import *
 from sympy import symbols, Eq, Function,UnevaluatedExpr, Mul
 from sympy import *
+import matplotlib.pyplot as plt
 
 #init_printing()
 from sympy import Piecewise, nan
@@ -24,8 +25,23 @@ def round_equation(eq, num_digits=2):
     rounded_rhs = round_expr(rhs, num_digits)
     return Eq(lhs, rounded_rhs)
 
+# Round the values in each column to n decimal places
+def round_values(x,n):
+    try:
+        return round(x, n)
+    except:
+        return x
+    
+# Apply the e-4 formatting to numeric columns
+def scientific_format(x):
+    try:
+        float_value = float(x)
+        return '{:.2e}'.format(float_value).replace('+', '')
+    except:
+        return x
+
 #%%
-def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
+def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type,latex_format=True):
     
     """
     m: Number of supports
@@ -62,21 +78,32 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
     d: set initial guess for the first iteration
  
     """
-    
-    # Round the values in each column to n decimal places
-    def round_values(x,n):
-        try:
-            return round(x, n)
-        except:
-            return x
+    #Isolator_Type = ['Lead-rubber bearing','Spherical friction bearing','EradiQuake bearing']
 
-    # Apply the e-4 formatting to numeric columns
-    def scientific_format(x):
-        try:
-            float_value = float(x)
-            return '{:.2e}'.format(float_value).replace('+', '')
-        except:
-            return x
+# Calculate Response Spectrum:
+    # Create a array of time:
+    shape=200
+    t=np.linspace(0,T_max,shape)
+    # Call the Response Spectrum function
+    C_sm, F_pga, F_a, F_v, A_S, S_DS,S_D1=AASHTO(t, PGA,S_S,S_1,SiteClass) 
+    
+# =============================================================================
+#     # Plot Design Response Spectrum
+#     plt.plot(t, C_sm)
+#     plt.title(f"Design Response Spectrum for PGA={PGA}, S_S={S_S}, S_1= {S_1}, SiteClass={SiteClass}")
+#     plt.xlabel(f'Period')
+#     plt.ylabel(f'Acceleration')
+#     plt.show()
+# =============================================================================
+     # Plot the design response spectrum
+
+    fig, ax = plt.subplots()
+    ax.plot(t, C_sm)
+    ax.set_title(f"Design Response Spectrum for PGA={PGA}, S_S={S_S}, S_1={S_1}, SiteClass={SiteClass}")
+    ax.set_xlabel('Period')
+    ax.set_ylabel('Acceleration')
+    plt.show()
+    fig.savefig('response_spectrum_plot.png')
 
 
     ##%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -207,11 +234,15 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
                            "$$d_{sub,j}$$": d_subj, 
                            "d": d, "d_new": d_new,        
                            "$$F_{sub,j}$$":F_subj ,
-                           "$$ F_{col,j,k}$$": F_coljk,
+                           "$$ F_{col,j,k}$$":F_coljk,
                            "$$T_{eff}$$": T_eff,
                            "$$K_{eff}$$":K_eff,
                            "$$\\xi$$":xi,
                            "$$B_{L}$$": B_L})
+		
+		# Convert all columns to float
+        for column in df.columns[1:]:
+            df[column] = df[column].astype(float)
         
         data[i]=df
 
@@ -224,13 +255,13 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
         ##%% Check the convergence condition:
 
         #if difference> epsilon:
-        if difference> epsilon:
+        if difference> tol:
             d=d_new
             i+=1
 
         else:
             break
-    print(f'Numbers of iteratations: {i}')
+    print(f'The problem reaches convergence after  {i} iterations')
     
     # The minimum displacement requirement given by:
     
@@ -247,12 +278,15 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,S_D1,q,k, epsilon):
             else:
                 data[k][col]=data[k][col]. apply(round_values, n=2)
         data[k].set_index(['Iteration',"d", "d_new","$$Q_d$$","$$K_d$$","$$T_{eff}$$","$$K_{eff}$$","$$\\xi$$", "$$B_{L}$$", 'Pier'], inplace=True)
+        
+    return data
     
      # Concatenate the DataFrames from each iteration
     
-    concat_df=pd.DataFrame()
+    #concat_df=pd.DataFrame()
    
-    for k, df in data.items():
-        concat_df = pd.concat([concat_df, df], ignore_index=False)
+    #for k, df in data.items():
+     #   concat_df = pd.concat([concat_df, df], ignore_index=False)
     
-    return data, concat_df
+    #return data, concat_df
+
