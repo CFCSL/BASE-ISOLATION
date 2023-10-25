@@ -770,4 +770,3 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 
 	return data_multimode
 		
-
