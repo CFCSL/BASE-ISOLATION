@@ -11,7 +11,7 @@ from Response_Spectrum import AASHTO
 import matplotlib.pyplot as plt
 
 #init_printing()
-from sympy import Piecewise
+#from sympy import Piecewise
 import numpy as np
 
 #%%
