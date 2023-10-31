@@ -106,7 +106,6 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 	# B2.1.1—Step A: Identifty Bridge Data
 	## B2.1.1.2—Step A2: Seismic Hazard
 	
-	
 	# B2.1.2—STEP B: ANALYZE BRIDGE FOR EARTHQUAKE LOADING IN LONGITUDINAL DIRECTION
 	## B2.1.2.1—STEP B1: SIMPLIFIED METHOD
 	### B2.1.2.1.1—Step B1.1: Initial System Displacement and Properties
