@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 from sympy import Piecewise, nan
 import numpy as np
 
-
 #%%
 def round_expr(expr, num_digits=2):
 	return expr.xreplace({n : round(n, num_digits) for n in expr.atoms(Number)})
