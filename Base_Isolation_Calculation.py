@@ -9,7 +9,7 @@ from Response_Spectrum import AASHTO
 #from sympy import symbols, Eq, Function,UnevaluatedExpr, Mul
 #from sympy import *
 import matplotlib.pyplot as plt
-
+import sympy as sp
 #init_printing()
 #from sympy import Piecewise
 import numpy as np
@@ -210,7 +210,7 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 
 		##%% Calculate the damping factor, B_L
 
-		B_L=Piecewise(((xi/0.05)**0.3,xi<0.3),(1.7, xi>=0.3))
+		B_L=sp.Piecewise(((xi/0.05)**0.3,xi<0.3),(1.7, xi>=0.3))
 
 		##%%  Calculate the displacement, d_new
 
