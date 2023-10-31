@@ -9,4 +9,4 @@ pillow
 pypdf2
 openpyxl
 ipywidgets
-
+sympy
