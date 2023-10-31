@@ -42,7 +42,7 @@ def scientific_format(x):
 
 
 #%%
-def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type,latex_format=True,plot_action=False, d=2):
+def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,tol,latex_format=True,plot_action=False, d=2.0):
 	
 	"""
 	m: Number of supports
@@ -119,28 +119,28 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 	#d=1.84
 	data=dict()
 
+
+
+	#print(f'iteration:{i} ')
+	#print(f'd={d}')
+
+	##%% Calculate characteristic strength, Q_d
+	Q_d=0.05*W_SS
+
+	##%% Calculate Post-yield stiffness, K_d
+	K_d=0.05*(W_SS/d)
+
+	### B2.1.2.1.2—Step B1.2: Initial Isolator Properties at Supports
+
+	##%% Calculate the characteristic strength, Q_dj
+
+	Q_dj=[Q_d*(W[j]/W_SS) for j in range(m)]
+
+	##%% Calculate postelastic stiffness, K_dj
+
+	K_dj= [K_d*(W[j]/W_SS) for j in range(m)]
+
 	while True:
-		
-		#print(f'iteration:{i} ')
-		#print(f'd={d}')
-		
-		##%% Calculate characteristic strength, Q_d
-		Q_d=q*W_SS
-
-		##%% Calculate Post-yield stiffness, K_d
-		K_d=k*(W_SS/d)
-
-		### B2.1.2.1.2—Step B1.2: Initial Isolator Properties at Supports
-
-		##%% Calculate the characteristic strength, Q_dj
-
-		Q_dj=[Q_d*(W[j]/W_SS) for j in range(m)]
-
-		##%% Calculate postelastic stiffness, K_dj
-
-		K_dj= [K_d*(W[j]/W_SS) for j in range(m)]
-
-
 		### B2.1.2.1.3—Step B1.3: Effective Stiffness of Combined Pier and Isolator System
 
 		##%% Calculate alpha_j
@@ -302,12 +302,10 @@ def Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
    
 	for i, df in data.items():
 		concat_df = pd.concat([concat_df, df], ignore_index=False)
-	#display(list(data.values())[0])
-	#display(list(data.values())[-1])
-	return list(data.values())[-1]
-
+	#return list(data.values())[-1]
+	return data
 ###############################################################################
-    
+	
 def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type,latex_format=True):
 	
 	#isolator_type = ["friction-based isolators", 'others'] 
@@ -360,12 +358,11 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 ## Step 1: Iteration
 	data=Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type,latex_format=False,plot_action=True, d=2.0)
 	display(data)
-
 	d=data.d.unique()[0]
 	d_new=data.d_new.unique()[0]
 	print(type(d))
-	Q_d=data.Q_d.unique()
-	K_d=data.K_d.unique()
+	Q_d=data.Q_d.unique()[0]
+	K_d=data.K_d.unique()[0]
 	alpha_j=data.alpha_j.to_list()
 	K_effj=data.K_effj.to_list()
 	d_isolj=data.d_isolj.to_list()
@@ -375,10 +372,10 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 	#print(K_dj)
 	K_isolj=data.K_isolj. to_list()
 	#print(K_isolj)
-	T_eff=data.T_eff.unique()
-	K_eff=data.K_eff.unique()
-	xi=data.xi.unique()
-	B_L=data.B_L.unique()
+	T_eff=data.T_eff.unique()[0]
+	K_eff=data.K_eff.unique()[0]
+	xi=data.xi.unique()[0]
+	B_L=data.B_L.unique()[0]
 	d_subj=data.d_subj.to_list()
 
 
@@ -402,17 +399,9 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 	plt.show()
 	
 	### Begin iteration
-	iter_multimode=1
+	iterration =1
 	d=d
-	
-# =============================================================================
-# 	print(f'd_multimode {round(d_multimode,2)}')
-# 	
-# 	data_multimode={}
-# 		
-# 	
-# 	
-# =============================================================================
+
 	while True:
 		## B2.1.2.2.1—Step B2.1:Characteristic Strength
 	
@@ -462,13 +451,15 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 	
 		##%% Recalculate system damping ratio, ξ :
 		
+			
+		# Update d_soli 
 		df=Iteration(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type,latex_format=False,plot_action=False, d=d_new)
 		d_isoli=df.d_isolj.to_list()
-		print(f'd_isoli={d_isoli}')
-		d_new=df.d_new.unique()[0]
-		d_subj=df.d_subj.to_list()
+		print(f'd_isoli={type(d_isoli)}')
+		#d1=df.d_new.unique()[0]
+		#d_subj=df.d_subj.to_list()
 		
-		print(d_subj)
+		#print(d_subj)
 
 		tol=abs((d_new-d)/d)
 		
@@ -485,12 +476,12 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 		
 			K_isoli=[Q_di[j]/d_isoli[j]+K_di[j] for j in range(m)] # (d_isoli in the document) is d_isolj in the convergence step
 			
-			#print(f'K_isoli={K_isoli}')
+			print(f'K_isoli={K_isoli}')
 			###%% Recalculate K_effj
 		
 			K_effj=[(K_sub[j]*K_isoli[j]*n)/(K_sub[j]+K_isoli[j]*n) for j in range(m)]
 			
-			#print(f'K_effj={K_effj}')
+			print(f'K_effj={K_effj}')
 		
 		
 	
@@ -521,17 +512,15 @@ def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,
 			#print(f'B_L={B_L}')
 			#Recalculate Keff
 		
-		# =============================================================================
-		# 	K_eff=sum(K_effj)
-		# 	
-		# 	#print(f'K_eff={K_eff}')
-		# 	
-		# 	#print(f'W_eff {W_eff}')
-		# 	
-		# 	#print(f'g={g}')
-		# 
-		# 	# Recalculate T_eff
-		# =============================================================================
+			K_eff=sum(K_effj)
+			
+			#print(f'K_eff={K_eff}')
+			
+			#print(f'W_eff {W_eff}')
+			
+			#print(f'g={g}')
+		
+			# Recalculate T_eff
 			W_eff= W_SS + W_PP #  Effective weight, W_eff
 			g=386.4 # (in./s^2) or 9.815(m/s^2)
 			T_eff= 2*np.pi*(W_eff/(g*K_eff))**(1/2)
