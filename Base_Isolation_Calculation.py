@@ -303,8 +303,9 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 		concat_df = pd.concat([concat_df, df], ignore_index=False)
 	#return list(data.values())[-1]
 	return data
-###############################################################################
-	
+##############################################################################
+
+
 # =============================================================================
 # def Multimode(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,q,k,tol,T_max, Isolator_Type,latex_format=True):
 # 	
