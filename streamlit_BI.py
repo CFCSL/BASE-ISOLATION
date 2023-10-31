@@ -12,7 +12,7 @@ import streamlit as st
 import helper_functions as hf
 from logo_header import *
 import matplotlib.pyplot as plt
-from Response_Spectrum import *
+from Response_Spectrum import AASHTO
 
 
 header()

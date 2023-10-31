@@ -5,24 +5,26 @@ Spyder Editor
 This is a temporary script file.
 """
 import pandas as pd 
-from Response_Spectrum import *
+from Response_Spectrum import AASHTO
 #from sympy import symbols, Eq, Function,UnevaluatedExpr, Mul
 #from sympy import *
 import matplotlib.pyplot as plt
 
 #init_printing()
-from sympy import Piecewise, nan
+from sympy import Piecewise
 import numpy as np
 
 #%%
-def round_expr(expr, num_digits=2):
-	return expr.xreplace({n : round(n, num_digits) for n in expr.atoms(Number)})
-
-def round_equation(eq, num_digits=2):
-	lhs = eq.lhs
-	rhs = eq.rhs
-	rounded_rhs = round_expr(rhs, num_digits)
-	return Eq(lhs, rounded_rhs)
+# =============================================================================
+# def round_expr(expr, num_digits=2):
+# 	return expr.xreplace({n : round(n, num_digits) for n in expr.atoms(Number)})
+# 
+# def round_equation(eq, num_digits=2):
+# 	lhs = eq.lhs
+# 	rhs = eq.rhs
+# 	rounded_rhs = round_expr(rhs, num_digits)
+# 	return Eq(lhs, rounded_rhs)
+# =============================================================================
 
 # Round the values in each column to n decimal places
 def round_values(x,n):
