@@ -7,7 +7,7 @@ This is a temporary script file.
 import pandas as pd 
 from Response_Spectrum import *
 #from sympy import symbols, Eq, Function,UnevaluatedExpr, Mul
-from sympy import *
+#from sympy import *
 import matplotlib.pyplot as plt
 
 #init_printing()
