@@ -7,7 +7,7 @@ Created on Tue Sep 26 09:45:14 2023
 
 import pandas as pd
 import numpy as np
-from Base_Isolation_Calculation import AASHTO
+from Base_Isolation_Calculation import B1
 import streamlit as st
 import helper_functions as hf
 from logo_header import *
