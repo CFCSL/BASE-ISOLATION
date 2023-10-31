@@ -11,7 +11,7 @@ from Response_Spectrum import *
 import matplotlib.pyplot as plt
 
 #init_printing()
-#from sympy import Piecewise, nan
+from sympy import Piecewise, nan
 import numpy as np
 
 #%%
