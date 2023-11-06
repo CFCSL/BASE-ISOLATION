@@ -33,26 +33,6 @@ n_col=st.sidebar.number_input("Number of columns per support $n_c$: ", value=3, 
 n_c=[0,n_col,n_col,0]
 
 angle_skew=st.sidebar.number_input("Angle of skew $\\alpha$: ", value=0.0, max_value=np.pi/2, format="%.1f")
-W=[]
-W_default=[44.95, 280.31, 280.31, 44.95]
-for i in range(int(m)):
-	W.append(st.sidebar.number_input(f"Weight of superstructure at support {i+1}:",value=W_default[i], min_value=0.0, format="%.2f"))
-
-W_PP=st.sidebar.number_input("Participating weight of piers $W_{PP}$ [k]",value=107.16, min_value=0.0, format="%.2f")
-W_SS=np.sum(W)
-W_eff=W_SS+W_PP
-
-# Stiffness longitudinal
-K_sub=[]
-K_sub_default=[10000.0, 172.0, 172.0,10000.0]
-for i in range(m):
-	K_sub.append(st.sidebar.number_input(f"Stiffness of each pier in the longitudinal direction {i+1}:", value=K_sub_default[i], min_value=0.0, format="%.1f"))
-
-# Stiffness transversal
-K_sub1=[]
-K_sub1_default=[10000.0, 687.0, 687.0,10000.0]
-for i in range(m):
-	K_sub1.append(st.sidebar.number_input(f"Stiffness of each pier in the trnsverse direction {i+1}:", value=K_sub1_default[i], min_value=0.0, format="%.1f"))
 
 Isolator_Types=["Lead-rubber bearing","Spherical friction bearing","EradiQuake bearing"]
 Isolator_Type=st.sidebar.selectbox("Isolator type", options=Isolator_Types)
@@ -65,7 +45,50 @@ SiteClass_options=["B","A","C","D","E"]
 SiteClass=st.sidebar.selectbox("SiteClass",options=SiteClass_options)
 
 #######################################
+# =============================================================================
+# W=[]
+# W_default=[44.95, 280.31, 280.31, 44.95]
+# for i in range(int(m)):
+# 	W.append(st.sidebar.number_input(f"Weight of superstructure at support {i+1}:",value=W_default[i], min_value=0.0, format="%.2f"))
+# 
+# W_PP=st.sidebar.number_input("Participating weight of piers $W_{PP}$ [k]",value=107.16, min_value=0.0, format="%.2f")
+# W_SS=np.sum(W)
+# W_eff=W_SS+W_PP
+# 
+# # Stiffness longitudinal
+# K_sub=[]
+# K_sub_default=[10000.0, 172.0, 172.0,10000.0]
+# for i in range(m):
+# 	K_sub.append(st.sidebar.number_input(f"Stiffness of each pier in the longitudinal direction {i+1}:", value=K_sub_default[i], min_value=0.0, format="%.1f"))
+# 
+# # Stiffness transversal
+# K_sub1=[]
+# K_sub1_default=[10000.0, 687.0, 687.0,10000.0]
+# for i in range(m):
+# 	K_sub1.append(st.sidebar.number_input(f"Stiffness of each pier in the trnsverse direction {i+1}:", value=K_sub1_default[i], min_value=0.0, format="%.1f"))
+# 
+# =============================================================================
+W_PP=st.number_input("Participating weight of piers $W_{PP}$ [k]",value=107.16, min_value=0.0, format="%.2f")
+dt = {
+    "Weight (W [k])": [44.95, 280.31, 280.31, 44.95],
+    "Longitudinal stiffness (K_sub)": [10000.0, 172.0, 172.0, 10000.0],
+    "Transverse stiffness": [10000.0, 687.0, 687.0, 10000.0]
+}
+index_values = ['Abutment 1', "Pier 1", "Pier 2", 'Abutment 2']
 
+df = pd.DataFrame(dt,index=index_values)
+df=st.data_editor(df, num_rows= "dynamic")
+
+W=df["Weight (W [k])"].to_list()
+
+K_sub=df["Longitudinal stiffness (K_sub)"].to_list()
+K_sub1=df["Transverse stiffness"].to_list()
+
+W_SS=np.sum(W)
+W_eff= W_SS+np.sum(W_PP)
+
+
+#########################################
 #Samples=["Sample 1.0","Sample 1.1", "Sample 1.2","Sample 1.3","Sample 1.4","Sample 1.5","Sample 1.6","Sample 2.0","Sample 2.1", "Sample 2.2","Sample 2.3","Sample 2.4","Sample 2.5","Sample 2.6",]
 st.markdown('---')
 st.write('Generate Example')
@@ -79,7 +102,7 @@ T_max=st.number_input("Maximum period $T_{max}=$", value=2.0, format="%.2f")
 
 ##################
 
-data=B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,tol,latex_format=False,plot_action=True)
+data=B1(m,n,n_c,W_SS,W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,tol,latex_format=False,plot_action=True)
 
 df_conv=list(data.values())[-1] # Obtain the df from the last iteration
 
@@ -104,7 +127,7 @@ if st.button("Generate Plot"):
 
 #
 # Download CSV
-hf.download_csv(df_conv,file_name="Sample_1")
+#hf.download_csv(df_conv,file_name="Sample_1")
 
 
 
