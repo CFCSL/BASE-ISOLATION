@@ -80,7 +80,7 @@ df=st.data_editor(df, num_rows= "dynamic")
 df=df.dropna(how="all", axis=0)
 st.markdown(""""Weight of superstructure, Wj, at each support.""") 
 
-st.markdown("""Stiffness, Ksub,j, of each support in both 
+st.markdown("""Stiffness, Ksubj, of each support in both 
 longitudinal and transverse directions of the 
 bridge. The calculation of these quantities 
 requires careful consideration of several factors 
