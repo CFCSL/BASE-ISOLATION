@@ -79,7 +79,7 @@ df = pd.DataFrame(dt,index=index_values)
 df=st.data_editor(df, num_rows= "dynamic")
 df=df.dropna(how="all", axis=0)
 
-st.markdown(""""
+st.markdown("""
 
 - Weight of superstructure, Wj, at each support.
 
