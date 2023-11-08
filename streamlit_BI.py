@@ -70,7 +70,7 @@ SiteClass=st.selectbox("SiteClass",options=SiteClass_options)
 W_PP=st.number_input("Participating weight of piers $W_{PP}$",value=107.16, min_value=0.0, format="%.2f")
 dt = {
     "Weight (W_j)": [44.95, 280.31, 280.31, 44.95],
-    "Longitudinal stiffness (K_sub)": [10000.0, 172.0, 172.0, 10000.0],
+    "Longitudinal stiffness (K_subj)": [10000.0, 172.0, 172.0, 10000.0],
     "Transverse stiffness": [10000.0, 687.0, 687.0, 10000.0]
 }
 index_values = ['Abutment 1', "Pier 1", "Pier 2", 'Abutment 2']
@@ -78,6 +78,7 @@ index_values = ['Abutment 1', "Pier 1", "Pier 2", 'Abutment 2']
 df = pd.DataFrame(dt,index=index_values)
 df=st.data_editor(df, num_rows= "dynamic")
 df=df.dropna(how="all", axis=0)
+
 st.markdown(""""Weight of superstructure, Wj, at each support.""") 
 
 st.markdown("""Stiffness, Ksubj, of each support in both 
