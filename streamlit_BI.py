@@ -68,6 +68,19 @@ SiteClass=st.selectbox("SiteClass",options=SiteClass_options)
 # 
 # =============================================================================
 W_PP=st.number_input("Participating weight of piers $W_{PP}$",value=107.16, min_value=0.0, format="%.2f")
+st.markdown("""
+
+- Weight of superstructure, $$W_j$$, at each support.
+
+- Stiffness, $$K_{subj}$$, of each support in both 
+longitudinal and transverse directions of the 
+bridge. The calculation of these quantities 
+requires careful consideration of several factors 
+such as the use of cracked sections when 
+estimating column or wall flexural stiffness, 
+foundation flexibility, and effective column 
+height.
+""")
 dt = {
     "Weight (W_j)": [44.95, 280.31, 280.31, 44.95],
     "Longitudinal stiffness (K_subj)": [10000.0, 172.0, 172.0, 10000.0],
@@ -79,19 +92,7 @@ df = pd.DataFrame(dt,index=index_values)
 df=st.data_editor(df, num_rows= "dynamic")
 df=df.dropna(how="all", axis=0)
 
-st.markdown("""
 
-- Weight of superstructure, Wj, at each support.
-
-- Stiffness, $$K_{subj}$$, of each support in both 
-longitudinal and transverse directions of the 
-bridge. The calculation of these quantities 
-requires careful consideration of several factors 
-such as the use of cracked sections when 
-estimating column or wall flexural stiffness, 
-foundation flexibility, and effective column 
-height.
-""")
 
 W=df["Weight (W_j)"].to_list()
 
