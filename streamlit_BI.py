@@ -20,7 +20,7 @@ header()
 logo()
 
 st.markdown('---')
-st.title("Base Isolation")
+st.title("SEISMIC ISOLATION DESIGN")
 
 
 st.markdown("**Parameters:**")
