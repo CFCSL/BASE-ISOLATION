@@ -308,4 +308,3 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 	#return list(data.values())[-1]
 	return data
 ##############################################################################
-
