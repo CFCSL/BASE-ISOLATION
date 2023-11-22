@@ -2,7 +2,7 @@
 """
 Created on Mon Nov 20 17:19:10 2023
 
-@author: cfcpc2
+@author: NAM
 """
 
 from docx import Document
