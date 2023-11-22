@@ -6,12 +6,7 @@ This is a temporary script file.
 """
 import pandas as pd 
 from Response_Spectrum import AASHTO
-#from sympy import symbols, Eq, Function,UnevaluatedExpr, Mul
-#from sympy import *
 import matplotlib.pyplot as plt
-#import sympy as sp
-#init_printing()
-#from sympy import Piecewise
 import numpy as np
 
 #%%
@@ -43,8 +38,10 @@ def scientific_format(x):
 
 
 #%%
-def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,tol,latex_format=True,plot_action=False, d=2.0):
-	
+#params=[m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,q,k,tol]
+#def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,q,k,tol,latex_format=True,plot_action=False):
+def B1(params,latex_format=True,plot_action=False):
+	m, n, n_c, W_SS, W_PP, W, K_sub, angle_skew, PGA, S_1, S_S, SiteClass, T_max, Isolator_Type, q, k, tol = params
 	"""
 	m: Number of supports
 	
@@ -89,6 +86,8 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 	# Call the Response Spectrum function
 	C_sm, F_pga, F_a, F_v, A_S, S_DS,S_D1=AASHTO(t, PGA,S_S,S_1,SiteClass) 
 	
+	print(f'F_pga={F_pga}, F_a={F_a}, F_v={F_v}, S_D1={S_D1}')
+	
 
 	 # Plot the design response spectrum
 	
@@ -113,22 +112,20 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 		
 	##%% Assume that the initial value of displacement d approximates 2.0
 	#d=1.84
-	i=1
+
 	
-	#d=10*S_D1
-	#d=1.84
+	d0=10*S_D1
+
 	data=dict()
 
 
-
-	#print(f'iteration:{i} ')
-	#print(f'd={d}')
-
 	##%% Calculate characteristic strength, Q_d
-	Q_d=0.05*W_SS
-
+	Q_d=q*W_SS
+	#print(f'q={q}')
+	#print(f'W_SS={W_SS}')
+	#print(f'Q_d={Q_d}')
 	##%% Calculate Post-yield stiffness, K_d
-	K_d=0.05*(W_SS/d)
+	K_d=k*(W_SS/d0)
 
 	### B2.1.2.1.2—Step B1.2: Initial Isolator Properties at Supports
 
@@ -140,6 +137,10 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 
 	K_dj= [K_d*(W[j]/W_SS) for j in range(m)]
 
+	d=2
+	i=1
+
+	
 	while True:
 		### B2.1.2.1.3—Step B1.3: Effective Stiffness of Combined Pier and Isolator System
 
@@ -162,7 +163,7 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 
 		##%% Calculate the displacement of the isolation system, d_isolj
 
-		d_isolj=  [d/(1+ alpha_j[j]) for j in range(m)]
+		d_isolj=[d/(1+ alpha_j[j]) for j in range(m)]
 		
 		#print(f'd_isolj: {d_isolj}')
 
@@ -218,6 +219,7 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 		##%%  Calculate the displacement, d_new
 
 		d_new=(9.79*S_D1*T_eff)/B_L
+		d_isolj=[d_new/(1+ alpha_j[j]) for j in range(m)]
 		
 		#print(f'd_new: {d_new}')
 	   #column_names_latex = 
@@ -231,16 +233,14 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 							"$\\alpha_j$": alpha_j, 
 							"$$K_{eff,j}$$": K_effj,
 							"$$d_{isol,j}$$":d_isolj,
-							"$$K_{isol,j}$$": K_isolj,
+							"$$K_{isol,j}$$":K_isolj,
 							"$$d_{sub,j}$$": d_subj, 
-							"$$F_{sub,j}$$":F_subj ,
+							"$$F_{sub,j}$$":F_subj,
 							"$$ F_{col,j,k}$$":F_coljk,
 							"$$T_{eff}$$": T_eff,
 							"$$K_{eff}$$":K_eff,
 							"$$\\xi$$":xi,
 							"$$B_{L}$$": B_L})
-
-
 
 		# Convert all columns to float
 		for column in df.columns[1:]:
@@ -289,11 +289,11 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 				"$$Q_{d,j}$$": "Q_dj",
 				"$$K_{d,j}$$": "K_dj",
 				"$\\alpha_j$": "alpha_j",
-				"$$K_{eff,j}$$": "K_effj",
-				"$$d_{isol,j}$$": "d_isolj",
-				"$$K_{isol,j}$$": "K_isolj",
-				"$$d_{sub,j}$$": "d_subj",
-				"$$F_{sub,j}$$": "F_subj",
+				"$$K_{eff,j}$$":"K_effj",
+				"$$d_{isol,j}$$":"d_isolj",
+				"$$K_{isol,j}$$":"K_isolj",
+				"$$d_{sub,j}$$":"d_subj",
+				"$$F_{sub,j}$$":"F_subj",
 				"$$ F_{col,j,k}$$": "F_coljk",
 				"$$T_{eff}$$": "T_eff",
 				"$$K_{eff}$$": "K_eff",
@@ -302,9 +302,11 @@ def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isol
 				})
 	 # Concatenate the DataFrames from each iteration
 	concat_df=pd.DataFrame()
-   
+
 	for i, df in data.items():
 		concat_df = pd.concat([concat_df, df], ignore_index=False)
 	#return list(data.values())[-1]
 	return data
 ##############################################################################
+
+
