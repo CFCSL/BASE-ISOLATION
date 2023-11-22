@@ -10,16 +10,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #%%
-# =============================================================================
-# def round_expr(expr, num_digits=2):
-# 	return expr.xreplace({n : round(n, num_digits) for n in expr.atoms(Number)})
-# 
-# def round_equation(eq, num_digits=2):
-# 	lhs = eq.lhs
-# 	rhs = eq.rhs
-# 	rounded_rhs = round_expr(rhs, num_digits)
-# 	return Eq(lhs, rounded_rhs)
-# =============================================================================
 
 # Round the values in each column to n decimal places
 def round_values(x,n):
@@ -137,7 +127,7 @@ def B1(params,latex_format=True,plot_action=False):
 
 	K_dj= [K_d*(W[j]/W_SS) for j in range(m)]
 
-	d=2
+	d=d0
 	i=1
 
 	
