@@ -114,8 +114,8 @@ st.markdown('---')
 #st.markdown("**The final result occurs when the problem converges**")
 
 # parameters for each sample:
-params1_0=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],np.pi/4,0.40,0.2,0.75,"B",2.0,"Lead-rubber bearing", 0.05,0.05,0.05]
-params1_1=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],0.0,0.40,0.2,0.3,"D",2.0,"Lead-rubber bearing", 0.075,0.1,0.05]
+params1_0=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],0.0,0.40,0.2,0.75,"B",2.0,"Lead-rubber bearing", 0.05,0.05,0.05]
+params1_1=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],0.0,0.40,0.2,0.75,"D",2.0,"Lead-rubber bearing", 0.075,0.1,0.05]
 params1_2=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],0.0,0.40,0.6,0.75,"B",2.0,"Lead-rubber bearing", 0.075,0.1,0.05]
 params1_3=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],0.0,0.40,0.2,0.75,"B",2.0,"Spherical friction bearing", 0.05,0.05,0.05]
 params1_4=[4,6,[0,3,3,0],650.52,107.16,[44.95,280.31,280.31,44.95],[10000.0,172.0,172.0,10000.0],0.0,0.40,0.2,0.75,"B",2.0,"EradiQuake bearing", 0.05,0.05,0.05]
@@ -135,11 +135,7 @@ samples = {
 }
 
 # Display the sample selection dropdown in the sidebar
-#selected_sample = st.sidebar.selectbox("Select the sample:", options=list(samples.keys()),key="select sample")
-# =============================================================================
-# bt=st.button("SAMPLES",key="btSamples")
-# if bt:
-# =============================================================================
+
 selected_sample = st.sidebar.radio("**SAMPLES:**", options=list(samples.keys()), index=0, key="select_sample")
 # Automatically fill out the input fields based on the selected sample
 params=default_params
