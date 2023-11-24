@@ -167,7 +167,7 @@ if selected_sample in samples:
 		'tol': params[16]
 		}
 	# Set values in Streamlit app using sidebar
-	m = st.sidebar.number_input("Number of supports $m$:", value=params_dict['m'], min_value=1)
+	m = st.sidebar.data_editor("Number of supports $m$:", value=params_dict['m'], min_value=1)
 	n = st.sidebar.number_input("Number of girder per support $n$:", value=params_dict['n'], min_value=1)
 	n_col = st.sidebar.number_input("Number of columns per support $n_c$:", value=params_dict['n_c'][1], min_value=1)
 	angle_skew = st.sidebar.number_input("Angle of skew $\\alpha$:", value=params_dict['angle_skew'], max_value=np.pi/2, format="%.1f")
