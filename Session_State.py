@@ -5,6 +5,11 @@ Created on Wed Nov 29 09:25:19 2023
 @author: cfcpc2
 """
 import streamlit as st
+from logo_header import *
+
+header()
+
+logo()
 
 def Func_SessionState(a, b):
 	if a is not None and b is not None:
@@ -17,7 +22,7 @@ def Func_SessionState(a, b):
 
 p1 = [1.0, 2.0]
 p2 = [4.0, 5.0]
-default=[None, None]
+default=[None]*2
 
 
 samples = {
