@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
+Created on Wed Nov 29 10:15:07 2023
 
-This is a temporary script file.
+@author: cfcpc2
 """
 import pandas as pd 
 from Response_Spectrum import AASHTO
@@ -31,7 +31,7 @@ def scientific_format(x):
 #params=[m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,q,k,tol]
 #def B1(m,n,n_c,W_SS, W_PP,W,K_sub,angle_skew,PGA, S_1,S_S, SiteClass,T_max, Isolator_Type,q,k,tol,latex_format=True,plot_action=False):
 def B1(params,latex_format=True,plot_action=False):
-	m, n, n_c, W_SS, W_PP, W, K_sub, angle_skew, PGA, S_1, S_S, SiteClass, T_max, Isolator_Type, q, k, tol = params
+	m, n, n_c, W_PP, W, K_sub, angle_skew, PGA, S_1, S_S, SiteClass, T_max, Isolator_Type, q, k, tol = params
 	"""
 	m: Number of supports
 	
@@ -108,7 +108,7 @@ def B1(params,latex_format=True,plot_action=False):
 
 	data=dict()
 
-
+	W_SS=np.sum(W)
 	##%% Calculate characteristic strength, Q_d
 	Q_d=q*W_SS
 	#print(f'q={q}')
@@ -297,6 +297,3 @@ def B1(params,latex_format=True,plot_action=False):
 		concat_df = pd.concat([concat_df, df], ignore_index=False)
 	#return list(data.values())[-1]
 	return data
-##############################################################################
-
-

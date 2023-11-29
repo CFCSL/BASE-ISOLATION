@@ -11,7 +11,7 @@ import numpy as np
 from Base_Isolation_Calculation import *
 
 
-def B2(params, latex_format=True,plot_action=False):
+def B2(params,T_eff, latex_format=True,plot_action=False):
 	m, n, n_c, W_SS, W_PP, W, K_sub, angle_skew, PGA, S_1, S_S, SiteClass, T_max, Isolator_Type, q, k, tol = params
 
 
@@ -24,7 +24,7 @@ def B2(params, latex_format=True,plot_action=False):
 
 
 ## Step 1: Recall the function B1
-	dt=B1(params,d=3.98,latex_format=False,plot_action=False)
+	dt=B1(params,d=2,latex_format=False,plot_action=False)
 	data=list(dt.values())[-1]
 	display(data)
 	d=data.d.unique()[0]
@@ -40,7 +40,7 @@ def B2(params, latex_format=True,plot_action=False):
 	#print(K_dj)
 	K_isolj=data.K_isolj. to_list()
 	#print(K_isolj)
-	T_eff=data.T_eff.unique()[0]
+	#T_eff=data.T_eff.unique()[0]
 	K_eff=data.K_eff.unique()[0]
 	xi=data.xi.unique()[0]
 	B_L=data.B_L.unique()[0]
@@ -63,18 +63,17 @@ def B2(params, latex_format=True,plot_action=False):
 
 
 
-	## B2.1.2.2.1—Step B2.1:Characteristic Strength
+	##Step B2.1:Characteristic Strength
 
 	##%% Calculate the characteristic strength, Qd,i, and postelastic stiffness, Kd,i, of each isolator “i” 
 	
 	Q_di=[Q_dj[j]/n for j in range(m)]
 	
-	
 	K_di=[K_dj[j]/n for j in range(m)]
 	
 	#print(f'K_di={K_di}')
 
-	## B2.1.2.2.2—Step B2.2: Initial Stiffness and Yield Displacement
+	##Step B2.2: Initial Stiffness and Yield Displacement
 
 	##%% Calculate the initial stiffness, Ku,i, and the yield displacement, dy,i, for each isolator “i”
 
@@ -87,7 +86,7 @@ def B2(params, latex_format=True,plot_action=False):
 	#print(f'K_ui={K_ui}')
 	#print(f'd_yi={d_yi}')
 	#while True:	
-	## B2.1.2.2.3—Step B2.3: Isolator Effective Stiffness, Kisol,i
+	##Step B2.3: Isolator Effective Stiffness, Kisol,i
 
 	##%% Calculate the isolator stiffness, Kisol,i, of each isolator “i”
 	
@@ -96,9 +95,9 @@ def B2(params, latex_format=True,plot_action=False):
 		
 	#print(f'k_isoli={k_isoli}')
 	
-	## B2.1.2.2.4—Step B2.4: ThreeDimensional Bridge Model
+	##Step B2.4: ThreeDimensional Bridge Model
 	
-	## B2.1.2.2.5—Step B2.5: Composite Design Response Spectrum
+	##Step B2.5: Composite Design Response Spectrum
 	if plot_action==True:
 		N=int((0.8*T_eff*shape)/T_max)
 		C_sm[N:]=C_sm[N:]/B_L # C_sm is calculated by Response Spectrum, and B_L is the result from the last  convergence step.
@@ -109,24 +108,25 @@ def B2(params, latex_format=True,plot_action=False):
 		plt.ylabel(f'Acceleration')
 		plt.show()
 
-	## B2.1.2.2.6—Step B2.6: Multimode Analysis of Finite Element Model
+	##Step B2.6: Multimode Analysis of Finite Element Model
 
 		#( Call the d_isolj from the previuos calculation)
 
 		##%% Recalculate system damping ratio, ξ :
 		
-			
+		d_1= 9.79*S_D1*T_eff/B_L
+		print(f'd_new={d_1}')
 		# Update d_soli 
-		dt1=B1(params,d=d_new,latex_format=False,plot_action=False)
+		dt1=B1(params,d=d_1,latex_format=False,plot_action=False)
 		data1=list(dt1.values())[-1]
 		display(data1)
 		d_isoli=data1.d_isolj.to_list()
 		print(f'd_isoli={type(d_isoli)}')
-		d_new=data1.d_new.unique()[0]
+		#d_new=data1.d_new.unique()[0]
 		#d1=df.d_new.unique()[0]
 		#d_subj=df.d_subj.to_list()
 		
-		print(d_new)
+		#print(d_new)
 
 		tol=abs((d_new-d)/d)
 		
