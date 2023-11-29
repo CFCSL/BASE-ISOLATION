@@ -23,10 +23,8 @@ st.markdown('---')
 st.title("SEISMIC ISOLATION DESIGN")
 
 st.header('Manual input')
-st.markdown("**Parameters:**")
 
 
-st.markdown('---')
 
 
 

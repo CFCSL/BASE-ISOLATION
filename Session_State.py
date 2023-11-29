@@ -6,38 +6,7 @@ Created on Wed Nov 29 09:25:19 2023
 """
 import streamlit as st
 import pandas as pd
-#from FuncSessionState import *
 
-# =============================================================================
-# 
-# # Initialization
-# if 'key' not in st.session_state:
-#     st.session_state['key'] = 'value'
-# 
-# st.write(st.session_state.key)
-# 
-# 
-# df=pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
-# 
-# st.session_state['fixed_table']=df
-# 
-# df1=st.data_editor(df,key=f'editor_1')
-# 
-# 
-# 
-# st.markdown('---')
-# 
-# st.write(st.session_state)
-# 
-# st.markdown('---')
-# 
-# st.write(df1)
-# 
-# st.markdown('---')
-# 
-# st.write(st.session_state[f'editor_1'])
-# 
-# =============================================================================
 def Func_SessionState(*params):
 	a, b = params
 	c = a * b
